@@ -1,5 +1,5 @@
 from templates.manterclienteUI import ManterClienteUI
-from templates.manterservicoUI import ManterServicoUI
+from templates.manterservicoUI import manterservicoUI
 import streamlit as st
 
 class IndexUI:
@@ -7,7 +7,7 @@ class IndexUI:
     def menu_admin():            
         op = st.sidebar.selectbox("Menu", ["Cadastro de Clientes", "Cadastro de Serviços"])
         if op == "Cadastro de Clientes": ManterClienteUI.main()
-        if op == "Cadastro de Serviços": ManterServicoUI.main()
+        if op == "Cadastro de Serviços": manterservicoUI.main()
 
     def sidebar():
         IndexUI.menu_admin()
