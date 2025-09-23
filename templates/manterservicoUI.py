@@ -5,7 +5,7 @@ import time
 
 class manterservicoUI:
     def main():
-        st.header("Cadastro de Clientes")
+        st.header("Cadastro de serviço")
         tab1, tab2, tab3, tab4 = st.tabs(["Listar", "Inserir", "Atualizar", "Excluir"])
         with tab1: manterservicoUI.listar()
         with tab2: manterservicoUI.inserir()

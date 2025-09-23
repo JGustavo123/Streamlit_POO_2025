@@ -12,8 +12,8 @@ class servico:
 
 
     def set_id(self, id): self.__id = id
-    def set_nome(self, descricao): self.__descricao = descricao
-    def set_email(self, valor): self.__valor = valor
+    def set_descricao(self, descricao): self.__descricao = descricao
+    def set_valor(self, valor): self.__valor = valor
 
 
     def to_json(self):
@@ -71,7 +71,7 @@ class ServicoDAO:
     def abrir(cls):
         cls.__objetos = []
         try:
-            with open("clientes.json", mode="r") as arquivo:
+            with open("servico.json", mode="r") as arquivo:
                 list_dic = json.load(arquivo)
                 for dic in list_dic:
                     obj = servico.from_json(dic)
