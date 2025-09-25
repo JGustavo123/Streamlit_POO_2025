@@ -8,7 +8,7 @@ class Horario:
         self.set_id_servico(0)
 
     def __str__(self):
-        return f"{self.__id} - self.__data.strftime('%d/%m/%Y %H:%M') - {self.__confirmado}"
+        return f"{self.__id} - {self.__data.strftime('%d/%m/%Y %H:%M')} - {self.__confirmado}"
 
     def get_id(self): return self.__id
     def get_data(self): return self.__data
@@ -23,23 +23,22 @@ class Horario:
     def set_id_servico(self, id_servico): self.__id_servico = id_servico
 
     def to_json(self):
-        dic = {"id":self.__id, "data":self.__data.strftime("%d/%m/%Y %H:%M"),
-            "confirmado":self.__confirmado, "id_cliente":self.__id_cliente,
-            "id_servico":self.__id_servico}
+        dic = {"id":self.__id, "data":self.__data.strftime("%d/%m/%Y %H:%M"), "confirmado":self.__confirmado, "id_cliente":self.__id_cliente, "id_servico":self.__id_servico}
         return dic
 
     @staticmethod
     def from_json(dic):
-        horario = Horario(dic["id"], datetime.strptime(dic["data"], "%d/%m/%Y%H:%M"))
+        horario = Horario(dic["id"], datetime.strptime(dic["data"], "%d/%m/%Y %H:%M"))
         horario.set_confirmado(dic["confirmado"])
         horario.set_id_cliente(dic["id_cliente"])
         horario.set_id_servico(dic["id_servico"])
         return horario
 
-    import json
+import json
 
 class HorarioDAO:
     __objetos = []
+
     @classmethod
     def inserir(cls, obj):
         cls.abrir()
@@ -80,14 +79,14 @@ class HorarioDAO:
     @classmethod
     def abrir(cls):
         cls.__objetos = []
-    try:
-        with open("horarios.json", mode ="r") as arquivo:
-            list_dic = json.load(arquivo)
-            for dic in list_dic:
-                obj = Horario.from_json(dic)
-                cls.__objetos.append(obj)
-    except FileNotFoundError:
-        pass
+        try:
+            with open("horarios.json", mode ="r") as arquivo:
+                list_dic = json.load(arquivo)
+                for dic in list_dic:
+                    obj = Horario.from_json(dic)
+                    cls.__objetos.append(obj)
+        except FileNotFoundError:
+            pass
 
     @classmethod
     def salvar(cls):

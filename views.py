@@ -7,6 +7,9 @@ class View:
     def cliente_listar():
         return ClienteDAO.listar()
     
+    def cliente_listar_id(id):
+        return ClienteDAO.listar_id(id)
+    
     def cliente_inserir(nome, email, fone):
         cliente_obj = Cliente(0, nome, email, fone)
         ClienteDAO.inserir(cliente_obj)
@@ -22,6 +25,9 @@ class View:
 
     def servico_listar():
         return ServicoDAO.listar()
+    
+    def servico_listar_id(id):
+        return ServicoDAO.listar_id(id)
     
     def servico_inserir(descricao, valor):
         servico_obj = servico(0, descricao, valor)  # variável renomeada
