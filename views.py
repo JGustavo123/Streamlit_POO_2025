@@ -11,12 +11,12 @@ class View:
     def cliente_listar_id(id):
         return ClienteDAO.listar_id(id)
     
-    def cliente_inserir(nome, email, fone):
-        cliente_obj = Cliente(0, nome, email, fone)
+    def cliente_inserir(nome, email, fone, senha):
+        cliente_obj = Cliente(0, nome, email, senha)
         ClienteDAO.inserir(cliente_obj)
     
-    def cliente_atualizar(id, nome, email, fone):
-        cliente_obj = Cliente(id, nome, email, fone)
+    def cliente_atualizar(id, nome, email, fone, senha):
+        cliente_obj = Cliente(id, nome, email, fone, senha)
         ClienteDAO.atualizar(cliente_obj)
     
     def cliente_excluir(id):
