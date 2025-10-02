@@ -11,7 +11,7 @@ class IndexUI:
         if op == "Cadastro de Clientes": ManterClienteUI.main()
         if op == "Cadastro de Serviços": manterservicoUI.main()
         if op == "Cadastro de Horários": ManterHorarioUI.main()
-        if op == "Cadastro de Profissionais": manterprofissionalUI.main()
+        if op == "Cadastro de profissionais": manterprofissionalUI.main()
     def sidebar():
         IndexUI.menu_admin()
     def main():
