@@ -5,6 +5,18 @@ from models.profissional import profissional, profissionalDAO
 
 class View:
 
+    def cliente_criar_admin():
+        for c in View.cliente_listar():
+            if c.get_email() == "admin": 
+                return 
+        View.cliente_inserir("admin", "admin", "fone", "1234")
+
+    def cliente_autenticar(email, senha):
+        for c in View.cliente_listar():
+            if c.get_email() == email and c.get_senha() == senha:
+               return {"id": c.get_id(), "nome": c.get_nome()}
+        return None
+
     def cliente_listar():
         return ClienteDAO.listar()
     
@@ -12,9 +24,10 @@ class View:
         return ClienteDAO.listar_id(id)
     
     def cliente_inserir(nome, email, fone, senha):
-        cliente_obj = Cliente(0, nome, email, senha)
+        cliente_obj = Cliente(0, nome, email, fone, senha)
         ClienteDAO.inserir(cliente_obj)
     
+
     def cliente_atualizar(id, nome, email, fone, senha):
         cliente_obj = Cliente(id, nome, email, fone, senha)
         ClienteDAO.atualizar(cliente_obj)

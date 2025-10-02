@@ -86,4 +86,4 @@ class ClienteDAO:
     @classmethod
     def salvar(cls):
         with open("clientes.json", mode="w") as arquivo:
-            json.dump(cls.__objetos, arquivo, default = Cliente.to_json)  
+            json.dump(cls.__objetos, arquivo, default = Cliente.to_json, indent=4)  

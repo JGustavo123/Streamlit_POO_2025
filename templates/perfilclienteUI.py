@@ -2,7 +2,7 @@ import streamlit as st
 from views import View
 import time
 
-class PerfilClienteUI:
+class PerfilclienteUI:
     def main():
         st.header("Meus Dados")
         op = View.cliente_listar_id(st.session_state["usuario_id"])

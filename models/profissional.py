@@ -1,6 +1,6 @@
 import json
 
-class profisional:
+class profissional:
     def __init__(self, id, nome, especialidade, conselho):
         self.set_id(id)
         self.set_nome(nome)
