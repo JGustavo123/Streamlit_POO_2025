@@ -1,5 +1,12 @@
 [
     {
+        "id": 3,
+        "nome": "admin",
+        "email": "admin",
+        "fone": "fone",
+        "senha": "1234"
+    },
+    {
         "id": 1,
         "nome": "Jo\u00e3o Gustavo Alves da Silva",
         "email": "joao.gustavo@gmail.com",
@@ -7,17 +14,17 @@
         "senha": "4321"
     },
     {
+        "id": 4,
+        "nome": "Kleiton",
+        "email": "kleiton@gmail.com",
+        "fone": "84987654321",
+        "senha": "1111"
+    },
+    {
         "id": 2,
         "nome": "Samuel Andrey ",
         "email": "samuel.andrey@gmail.com",
         "fone": "123456789",
-        "senha": "1234"
-    },
-    {
-        "id": 3,
-        "nome": "admin",
-        "email": "admin",
-        "fone": "fone",
-        "senha": "1234"
+        "senha": "2345"
     }
 ]

@@ -23,7 +23,7 @@ class profissional:
     
     @staticmethod
     def from_json(dic):
-        return profisional(dic["id"], dic["nome"], dic["especialidade"], dic["conselho"])
+        return profissional(dic["id"], dic["nome"], dic["especialidade"], dic["conselho"])
 
     def __str__(self):
         return f"{self.__id} - {self.__nome} - {self.__especialidade} - {self.__conselho}"
@@ -75,7 +75,7 @@ class profissionalDAO:
             with open("profissional.json", mode="r") as arquivo:
                 list_dic = json.load(arquivo)
                 for dic in list_dic:
-                    obj = profisional.from_json(dic)
+                    obj = profissional.from_json(dic)
                     cls.__objetos.append(obj)
         except FileNotFoundError:
             pass
