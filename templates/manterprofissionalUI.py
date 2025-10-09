@@ -23,10 +23,12 @@ class manterprofissionalUI:
 
     def inserir():
         nome = st.text_input("Informe o nome")
+        email = st.text_input("Informe o e-mail")
+        senha = st.text_input("Informe a senha", type="password")
         especialidade = st.text_input("Informe a especialidade ")
         conselho = st.text_input("Informe o conselho")
         if st.button("Inserir"):
-            View.profissional_inserir(nome, especialidade, conselho)
+            View.profissional_inserir(nome, email, senha, especialidade, conselho)
             st.success("Profissional inserido com sucesso")
             time.sleep(2)
             st.rerun()
@@ -50,10 +52,10 @@ class manterprofissionalUI:
         profissional = View.profissional_listar()
         if len(profissional) == 0: st.write("Nenhum profissional cadastrado")
         else:
-            op = st.selectbox("Exclusão de profisional", profissional)
+            op = st.selectbox("Exclusão de profissional", profissional)
             if st.button("Excluir"):
                 id = op.get_id()
                 View.profissional_excluir(id)
-                st.success("profissional excluído com sucesso")
+                st.success("Profissional excluído com sucesso")
                 time.sleep(2)
                 st.rerun()
