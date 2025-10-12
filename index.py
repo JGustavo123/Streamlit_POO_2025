@@ -4,7 +4,8 @@ from templates.manterhorarioUI import ManterHorarioUI
 from templates.manterprofissionalUI import manterprofissionalUI
 from templates.abrircontaUI import abrircontaUI
 from templates.loginUI import loginUI
-from templates.perfilclienteUI import PerfilclienteUI
+from templates.perfilUI import PerfilUI
+
 from views import View
 import streamlit as st
 
@@ -21,6 +22,12 @@ class IndexUI:
             if c.get_email() == email and c.get_senha() == senha:
                 return {"id": c.get_id(), "nome": c.get_nome()}
         return None
+    
+    def profissional_autenticar(email, senha):
+        for p in View.profissional_listar():
+            if p.get_email() == email and p.get_senha() == senha:
+                return {"id": p.get_id(), "nome": p.get_nome()}
+        return None
 
     def menu_visitante():
         op = st.sidebar.selectbox("Menu", ["Entrar no Sistema", "Abrir Conta"])
@@ -29,7 +36,11 @@ class IndexUI:
 
     def menu_cliente():
         op = st.sidebar.selectbox("Menu", ["Meus Dados"])
-        if op == "Meus Dados": PerfilclienteUI.main()
+        if op == "Meus Dados": PerfilUI.main()
+    
+    def menu_profissional():
+        op = st.sidebar.selectbox("Menu", ["Meus Dados"])
+        if op == "Meus Dados": PerfilUI.main()
     
     def menu_admin():            
         op = st.sidebar.selectbox("Menu", ["Cadastro de Clientes", "Cadastro de Serviços", "Cadastro de Horários", "Cadastro de profissionais"])

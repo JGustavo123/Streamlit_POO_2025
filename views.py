@@ -39,7 +39,7 @@ class View:
         ClienteDAO.atualizar(cliente_obj)
     
     def cliente_excluir(id):
-        cliente_obj = Cliente(id, "", "", "")
+        cliente_obj = Cliente(id, "", "", "", "")
         ClienteDAO.excluir(cliente_obj)
     
 

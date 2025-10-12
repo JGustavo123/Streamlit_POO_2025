@@ -7,13 +7,6 @@
         "senha": "1234"
     },
     {
-        "id": 1,
-        "nome": "Jo\u00e3o Gustavo Alves da Silva",
-        "email": "joao.gustavo@gmail.com",
-        "fone": "84988885598",
-        "senha": "4321"
-    },
-    {
         "id": 4,
         "nome": "Kleiton",
         "email": "kleiton@gmail.com",
