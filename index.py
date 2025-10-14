@@ -3,8 +3,10 @@ from templates.manterservicoUI import manterservicoUI
 from templates.manterhorarioUI import ManterHorarioUI
 from templates.manterprofissionalUI import manterprofissionalUI
 from templates.abrircontaUI import abrircontaUI
+from templates.abriragendaUI import AbriragendaUI
 from templates.loginUI import loginUI
 from templates.perfilUI import PerfilUI
+from templates.agendarservicoUI import AgendarServicoUI
 
 from views import View
 import streamlit as st
@@ -28,20 +30,21 @@ class IndexUI:
             if p.get_email() == email and p.get_senha() == senha:
                 return {"id": p.get_id(), "nome": p.get_nome()}
         return None
-
+    
     def menu_visitante():
         op = st.sidebar.selectbox("Menu", ["Entrar no Sistema", "Abrir Conta"])
         if op == "Entrar no Sistema": loginUI.main()
         if op == "Abrir Conta": abrircontaUI.main()
 
     def menu_cliente():
-        op = st.sidebar.selectbox("Menu", ["Meus Dados"])
+        op = st.sidebar.selectbox("Menu", ["Meus Dados", "Agendar Serviço"])
         if op == "Meus Dados": PerfilUI.main()
+        if op == "Agendar Serviço": AgendarServicoUI.main()
     
     def menu_profissional():
-        op = st.sidebar.selectbox("Menu", ["Meus Dados"])
+        op = st.sidebar.selectbox("Menu", ["Meus Dados", "Minha Agenda"])
         if op == "Meus Dados": PerfilUI.main()
-    
+        if op == "Minha Agenda": AbriragendaUI.main()
     def menu_admin():            
         op = st.sidebar.selectbox("Menu", ["Cadastro de Clientes", "Cadastro de Serviços", "Cadastro de Horários", "Cadastro de profissionais"])
         if op == "Cadastro de Clientes": ManterClienteUI.main()
