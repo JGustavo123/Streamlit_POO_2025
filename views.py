@@ -2,7 +2,7 @@ from models.cliente import Cliente, ClienteDAO
 from models.servico import servico, ServicoDAO
 from models.horario import Horario, HorarioDAO
 from models.profissional import profissional, profissionalDAO
-
+import datetime 
 class View:
 
     def cliente_criar_admin():

@@ -1,6 +1,7 @@
 import streamlit as st
 from views import View
 import time
+
 class AgendarServicoUI:
     def main():
         st.header("Agendar Serviço")
@@ -16,6 +17,6 @@ class AgendarServicoUI:
                 servico = st.selectbox("Informe o serviço", servicos)
                 if st.button("Agendar"):
                     View.horario_atualizar(horario.get_id(), horario.get_data(), False, st.session_state["usuario_id"], servico.get_id(), profissional.get_id())
-                st.success("Horário agendado com sucesso")
-                time.sleep(2)
-                st.rerun()
+                    st.success("Horário agendado com sucesso")
+                    time.sleep(2)
+                    st.rerun()
