@@ -15,12 +15,12 @@ class loginUI:
             
             else:
                 if c is not None:
-                    st.session_state["usuario_id"] = c["id"]
-                    st.session_state["usuario_nome"] = c["nome"]
+                    st.session_state["usuario_id"] = c.get_id()
+                    st.session_state["usuario_nome"] = c.get_nome()
                     st.session_state["usuario_tipo"] = "cliente"
                 else:
-                    st.session_state["usuario_id"] = p["id"]
-                    st.session_state["usuario_nome"] = p["nome"]
+                    st.session_state["usuario_id"] = p.get_id()
+                    st.session_state["usuario_nome"] = p.get_nome()
                     st.session_state["usuario_tipo"] = "profissional"
                 
                 st.success(f"Bem vindo(a), {st.session_state['usuario_nome']}!")
