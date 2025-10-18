@@ -2,7 +2,7 @@ from models.cliente import Cliente, ClienteDAO
 from models.servico import servico, ServicoDAO
 from models.horario import Horario, HorarioDAO
 from models.profissional import profissional, profissionalDAO
-import datetime 
+from datetime import datetime
 
 class View:
 
@@ -15,13 +15,14 @@ class View:
     def cliente_autenticar(email, senha):
         for c in View.cliente_listar():
             if c.get_email() == email and c.get_senha() == senha:
-               return {"id": c.get_id(), "nome": c.get_nome()}
+                return {"id":c.get_id(), "nome":
+            c.get_nome()}
         return None
     
     def profissional_autenticar(email, senha):
-        for p in View.profissional_listar():
+        for p in profissionalDAO.listar():
             if p.get_email() == email and p.get_senha() == senha:
-               return {"id": p.get_id(), "nome": p.get_nome()}
+                return {"id": p.get_id(), "nome": p.get_nome()}
         return None
 
     def cliente_listar():

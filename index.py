@@ -6,34 +6,16 @@ from templates.abrircontaUI import abrircontaUI
 from templates.abriragendaUI import AbriragendaUI
 from templates.perfilclienteUI import PerfilClienteUI
 from templates.perfilprofissionalUI import PerfilProfissionalUI
-from templates.loginUI import loginUI
+from templates.loginUI import LoginUI
 from templates.agendarservicoUI import AgendarServicoUI
 from views import View
 import streamlit as st
 
 class IndexUI:
 
-    def cliente_criar_admin():
-        for c in View.cliente_listar():
-            if c.get_email() == "admin": 
-                return 
-        View.cliente_inserir("admin", "admin", "fone", "1234")
-
-    def cliente_autenticar(email, senha):
-        for c in View.cliente_listar():
-            if c.get_email() == email and c.get_senha() == senha:
-                return {"id": c.get_id(), "nome": c.get_nome()}
-        return None
-    
-    def profissional_autenticar(email, senha):
-        for p in View.profissional_listar():
-            if p.get_email() == email and p.get_senha() == senha:
-                return {"id": p.get_id(), "nome": p.get_nome()}
-        return None
-    
     def menu_visitante():
         op = st.sidebar.selectbox("Menu", ["Entrar no Sistema", "Abrir Conta"])
-        if op == "Entrar no Sistema": loginUI.main()
+        if op == "Entrar no Sistema": LoginUI.main()
         if op == "Abrir Conta": abrircontaUI.main()
 
     def menu_cliente():
