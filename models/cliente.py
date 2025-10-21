@@ -29,7 +29,7 @@ class Cliente:
         return Cliente(dic["id"], dic["nome"], dic["email"], dic["fone"], dic["senha"])
 
     def __str__(self):
-        return f"{self.__id} - {self.__nome} - {self.__email} - {self.__fone} - {self.__senha}"
+        return f"{self.__id} - {self.__nome} - {self.__email} - {self.__fone}, - {self.__senha}"
 
 class ClienteDAO:
     __objetos = []
@@ -86,4 +86,4 @@ class ClienteDAO:
     @classmethod
     def salvar(cls):
         with open("clientes.json", mode="w") as arquivo:
-            json.dump(cls.__objetos, arquivo, default = Cliente.to_json, indent=4)  
+            json.dump(cls.__objetos, arquivo, default = Cliente.to_json)  

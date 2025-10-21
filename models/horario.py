@@ -1,94 +1,108 @@
+import json
 from datetime import datetime
+
 class Horario:
     def __init__(self, id, data):
-        self.set_id(id)
-        self.set_data(data)
-        self.set_confirmado(False)
-        self.set_id_cliente(0)
-        self.set_id_servico(0)
+        self.__id = id
+        self.__data = data
+        self.__confirmado = False
+        self.__id_cliente = None
+        self.__id_servico = None
+        self.__id_profissional = None
 
-    def __str__(self):
-        return f"{self.__id} - {self.__data.strftime('%d/%m/%Y %H:%M')} - {self.__confirmado}"
-
+    # getters
     def get_id(self): return self.__id
     def get_data(self): return self.__data
     def get_confirmado(self): return self.__confirmado
     def get_id_cliente(self): return self.__id_cliente
     def get_id_servico(self): return self.__id_servico
+    def get_id_profissional(self): return self.__id_profissional
 
-    def set_id(self, id): self.__id = id
-    def set_data(self, data): self.__data = data
+    # setters
     def set_confirmado(self, confirmado): self.__confirmado = confirmado
     def set_id_cliente(self, id_cliente): self.__id_cliente = id_cliente
     def set_id_servico(self, id_servico): self.__id_servico = id_servico
+    def set_id_profissional(self, id_profissional): self.__id_profissional = id_profissional
 
-    def to_json(self):
-        dic = {"id":self.__id, "data":self.__data.strftime("%d/%m/%Y %H:%M"), "confirmado":self.__confirmado, "id_cliente":self.__id_cliente, "id_servico":self.__id_servico}
-        return dic
+    def to_dict(self):
+        """Converte o objeto em dicionário serializável"""
+        data_str = None
+        if isinstance(self.__data, datetime):
+            data_str = self.__data.strftime("%Y-%m-%d %H:%M:%S")
+        elif isinstance(self.__data, str):
+            data_str = self.__data
+        else:
+            data_str = str(self.__data)
+        return {
+            "id": self.__id,
+            "data": data_str,
+            "confirmado": self.__confirmado,
+            "id_cliente": self.__id_cliente,
+            "id_servico": self.__id_servico,
+            "id_profissional": self.__id_profissional
+        }
 
     @staticmethod
-    def from_json(dic):
-        horario = Horario(dic["id"], datetime.strptime(dic["data"], "%d/%m/%Y %H:%M"))
-        horario.set_confirmado(dic["confirmado"])
-        horario.set_id_cliente(dic["id_cliente"])
-        horario.set_id_servico(dic["id_servico"])
-        return horario
+    def from_dict(d):
+        """Reconstrói um objeto Horario a partir de um dicionário"""
+        data = d.get("data")
+        # converte para datetime se possível
+        if isinstance(data, str):
+            for fmt in ("%Y-%m-%d %H:%M:%S", "%d/%m/%Y %H:%M", "%Y-%m-%dT%H:%M:%S"):
+                try:
+                    data = datetime.strptime(data, fmt)
+                    break
+                except:
+                    pass
+        h = Horario(d.get("id"), data)
+        h.set_confirmado(d.get("confirmado", False))
+        h.set_id_cliente(d.get("id_cliente"))
+        h.set_id_servico(d.get("id_servico"))
+        h.set_id_profissional(d.get("id_profissional"))
+        return h
 
-import json
 
 class HorarioDAO:
-    __objetos = []
+    arquivo = "horarios.json"
 
-    @classmethod
-    def inserir(cls, obj):
-        cls.abrir()
-        id = 0
-        for aux in cls.__objetos:
-            if aux.get_id() > id: id = aux.get_id() 
-        obj.set_id(id + 1)
-        cls.__objetos.append(obj)
-        cls.salvar()
+    @staticmethod
+    def salvar(lista):
+        with open(HorarioDAO.arquivo, "w", encoding="utf-8") as f:
+            json.dump([obj.to_dict() for obj in lista], f, indent=4, ensure_ascii=False)
 
-    @classmethod
-    def listar(cls):
-        cls.abrir()
-        return cls.__objetos
-
-    @classmethod
-    def listar_id(cls, id):
-        cls.abrir()
-        for obj in cls.__objetos:
-            if obj.get_id() == id: return obj
-        return None
-    
-    @classmethod
-    def atualizar(cls, obj):
-        aux = cls.listar_id(obj.get_id())
-        if aux != None:
-            cls.__objetos.remove(aux)
-            cls.__objetos.append(obj)
-            cls.salvar()
-
-    @classmethod
-    def excluir(cls, obj):
-        aux = cls.listar_id(obj.get_id())
-        if aux != None:
-            cls.__objetos.remove(aux)
-            cls.salvar()
-
-    @classmethod
-    def abrir(cls):
-        cls.__objetos = []
+    @staticmethod
+    def abrir():
         try:
-            with open("horarios.json", mode ="r") as arquivo:
-                list_dic = json.load(arquivo)
-                for dic in list_dic:
-                    obj = Horario.from_json(dic)
-                    cls.__objetos.append(obj)
+            with open(HorarioDAO.arquivo, "r", encoding="utf-8") as f:
+                lista = json.load(f)
+                return [Horario.from_dict(obj) for obj in lista]
         except FileNotFoundError:
-            pass
+            return []
+        except json.JSONDecodeError:
+            return []
 
-    @classmethod
-    def salvar(cls):
-        with open("horarios.json", mode="w") as arquivo:
-            json.dump(cls.__objetos, arquivo, default = Horario.to_json)
+    @staticmethod
+    def listar():
+        return HorarioDAO.abrir()
+
+    @staticmethod
+    def inserir(horario):
+        lista = HorarioDAO.abrir()
+        novo_id = max([obj.get_id() for obj in lista], default=0) + 1
+        horario._Horario__id = novo_id
+        lista.append(horario)
+        HorarioDAO.salvar(lista)
+
+    @staticmethod
+    def atualizar(horario):
+        lista = HorarioDAO.abrir()
+        for i, obj in enumerate(lista):
+            if obj.get_id() == horario.get_id():
+                lista[i] = horario
+        HorarioDAO.salvar(lista)
+
+    @staticmethod
+    def excluir(horario):
+        lista = HorarioDAO.abrir()
+        lista = [obj for obj in lista if obj.get_id() != horario.get_id()]
+        HorarioDAO.salvar(lista)

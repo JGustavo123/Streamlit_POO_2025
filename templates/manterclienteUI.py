@@ -25,7 +25,7 @@ class ManterClienteUI:
         nome = st.text_input("Informe o nome")
         email = st.text_input("Informe o e-mail")
         fone = st.text_input("Informe o fone")
-        senha = st.text_input("Informe a senha", type="password")
+        senha = st.text_input("Informe a senha")
         if st.button("Inserir"):
             View.cliente_inserir(nome, email, fone, senha)
             st.success("Cliente inserido com sucesso")
@@ -40,7 +40,7 @@ class ManterClienteUI:
             nome = st.text_input("Informe o novo nome", op.get_nome())
             email = st.text_input("Informe o novo e-mail", op.get_email())
             fone = st.text_input("Informe o novo fone", op.get_fone())
-            senha = st.text_input("Nova senha", op.get_senha(), type="password")
+            senha = st.text_input("Informe o novo senha", op.get_senha())
             if st.button("Atualizar"):
                 id = op.get_id()
                 View.cliente_atualizar(id, nome, email, fone, senha)

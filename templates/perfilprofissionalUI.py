@@ -14,7 +14,7 @@ class PerfilProfissionalUI:
         senha = st.text_input("Senha", op.get_senha(), type="password")
 
         if st.button("Atualizar"):
-            View.profissional_atualizar(op.get_id(), nome, email, senha, especialidade, conselho)
+            View.profissional_atualizar(op.get_id(), nome, especialidade, conselho, email, senha)
             st.success("Dados atualizados com sucesso!")
             time.sleep(2)
             st.rerun()

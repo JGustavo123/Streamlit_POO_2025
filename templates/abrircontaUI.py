@@ -2,7 +2,7 @@ import streamlit as st
 from views import View
 import time
 
-class abrircontaUI:
+class AbrirContaUI:
     def main():
         st.header("Abrir Conta no Sistema")
         nome = st.text_input("Informe o nome")
@@ -14,3 +14,6 @@ class abrircontaUI:
             st.success("Conta criada com sucesso")
             time.sleep(2)
             st.rerun()
+
+
+
