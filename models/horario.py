@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 
 class Horario:
+    
     def __init__(self, id, data):
         self.__id = id
         self.__data = data
