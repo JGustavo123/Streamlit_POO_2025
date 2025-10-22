@@ -3,6 +3,7 @@ from views import View
 import time
 
 class PerfilClienteUI:
+    
     def main():
         st.header("Meus Dados")
 

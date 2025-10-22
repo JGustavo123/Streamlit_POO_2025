@@ -2,21 +2,23 @@ import streamlit as st
 from views import View
 
 class ConfirmarServicoUI:
+
     def main():
         st.header("Confirmar Serviço")
 
         if "usuario_id" not in st.session_state:
             st.error("Nenhum profissional logado.")
             return
-
+        
         id_profissional = st.session_state["usuario_id"]
-
         horarios = View.horario_filtrar_profissional(id_profissional)
+
         if len(horarios) == 0:
             st.info("Nenhum horário disponível para confirmação.")
             return
-
+        
         opcoes_horarios = []
+
         for h in horarios:
             cliente = View.cliente_listar_id(h.get_id_cliente())
             cliente_nome = cliente.get_nome() if cliente else "Sem cliente"

@@ -10,22 +10,19 @@ class Horario:
         self.__id_servico = None
         self.__id_profissional = None
 
-    # getters
     def get_id(self): return self.__id
     def get_data(self): return self.__data
     def get_confirmado(self): return self.__confirmado
     def get_id_cliente(self): return self.__id_cliente
     def get_id_servico(self): return self.__id_servico
     def get_id_profissional(self): return self.__id_profissional
-
-    # setters
+ 
     def set_confirmado(self, confirmado): self.__confirmado = confirmado
     def set_id_cliente(self, id_cliente): self.__id_cliente = id_cliente
     def set_id_servico(self, id_servico): self.__id_servico = id_servico
     def set_id_profissional(self, id_profissional): self.__id_profissional = id_profissional
 
     def to_dict(self):
-        """Converte o objeto em dicionário serializável"""
         data_str = None
         if isinstance(self.__data, datetime):
             data_str = self.__data.strftime("%Y-%m-%d %H:%M:%S")
@@ -44,9 +41,7 @@ class Horario:
 
     @staticmethod
     def from_dict(d):
-        """Reconstrói um objeto Horario a partir de um dicionário"""
         data = d.get("data")
-        # converte para datetime se possível
         if isinstance(data, str):
             for fmt in ("%Y-%m-%d %H:%M:%S", "%d/%m/%Y %H:%M", "%Y-%m-%dT%H:%M:%S"):
                 try:
@@ -60,7 +55,6 @@ class Horario:
         h.set_id_servico(d.get("id_servico"))
         h.set_id_profissional(d.get("id_profissional"))
         return h
-
 
 class HorarioDAO:
     arquivo = "horarios.json"

@@ -6,6 +6,7 @@ from datetime import datetime
 
 
 class ManterHorarioUI:
+
     def main():
         st.header("Cadastro de Horários")
         tab1, tab2, tab3, tab4 = st.tabs(["Listar", "Inserir", "Atualizar", "Excluir"])
@@ -14,9 +15,9 @@ class ManterHorarioUI:
         with tab3: ManterHorarioUI.atualizar()
         with tab4: ManterHorarioUI.excluir()
 
-            
     def listar():
         horarios = View.horario_listar()
+
         if len(horarios) == 0: st.write("Nenhum horário cadastrado")
         else: 
             dic = []
@@ -24,12 +25,15 @@ class ManterHorarioUI:
                 cliente = View.cliente_listar_id(obj.get_id_cliente())
                 servico = View.servico_listar_id(obj.get_id_servico())
                 profissional = View.profissional_listar_id(obj.get_id_profissional())
+
                 if cliente != None:
                     cliente = cliente.get_nome()
+
                 if servico != None: 
                     servico = servico.get_descricao()
+
                 if profissional != None: profissional = profissional.get_nome()
-                dic.append({"id" : obj.get_id(), "data" : obj.get_data(), "confirmado" : obj.get_confirmado(), "cliente" : cliente, "serviço" : servico})
+                dic.append({"id" : obj.get_id(), "data" : obj.get_data(), "confirmado" : obj.get_confirmado(), "cliente" : cliente, "serviço" : servico})              
             df = pd.DataFrame(dic)
             st.dataframe(df)
 
@@ -42,6 +46,7 @@ class ManterHorarioUI:
         cliente = st.selectbox("Informe o cliente", clientes, index = None)
         servico = st.selectbox("Informe o serviço", servicos, index = None)
         profissional = st.selectbox("Informe o profissional", profissionais, index = None)
+
         if st.button("Inserir"):
             id_cliente = None 
             id_servico = None
@@ -55,6 +60,7 @@ class ManterHorarioUI:
 
     def atualizar():
         horarios = View.horario_listar()
+
         if len(horarios) == 0: st.write("Nenhum horário cadastrado")
         else: 
             clientes = View.cliente_listar()
@@ -69,6 +75,7 @@ class ManterHorarioUI:
             cliente = st.selectbox("Informe o novo cliente", clientes, next((i for i, c in enumerate(clientes) if c.get_id() == id_cliente), None))
             servico = st.selectbox("Informe o novo serviço", servicos, next((i for i, s in enumerate(servicos) if s.get_id() == id_servico), None)) 
             profissional = st.selectbox("Informe o novo profissional", profissionais, next((i for i, s in enumerate(profissionais) if s.get_id() == id_profissional), None)) 
+
             if st.button("Atualizar"):
                 id_cliente = None
                 id_servico = None
@@ -84,6 +91,7 @@ class ManterHorarioUI:
         if len(horarios) == 0: st.write("Nenhum horário cadastrado")
         else:
             op = st.selectbox("Exclusão de Horários", horarios)
+            
             if st.button("Excluir"):
                 View.horario_excluir(op.get_id())
                 st.success("Horário excluído com sucesso")

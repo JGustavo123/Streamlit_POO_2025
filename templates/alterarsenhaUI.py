@@ -2,6 +2,7 @@ import streamlit as st
 from views import View
 
 class AlterarSenhaUI:
+
     def main():
         st.header("Alterar Senha")
         id_cliente = st.session_state["usuario_id"]
@@ -10,8 +11,7 @@ class AlterarSenhaUI:
         id = cliente.get_id()
         nome = cliente.get_nome()
         email = cliente.get_email()
-        fone = cliente.get_fone()
-        
+        fone = cliente.get_fone()     
         senha = st.text_input("Digite a nova senha")
 
         if st.button("Atualizar senha"):

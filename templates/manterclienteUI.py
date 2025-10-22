@@ -4,6 +4,7 @@ from views import View
 import time
 
 class ManterClienteUI:
+
     def main():
         st.header("Cadastro de Clientes")
         tab1, tab2, tab3, tab4 = st.tabs(["Listar", "Inserir", "Atualizar", "Excluir"])
@@ -14,6 +15,7 @@ class ManterClienteUI:
 
     def listar():
         clientes = View.cliente_listar()
+
         if len(clientes) == 0: st.write("Nenhum cliente cadastrado")
         else:
             list_dic = []
@@ -26,6 +28,7 @@ class ManterClienteUI:
         email = st.text_input("Informe o e-mail")
         fone = st.text_input("Informe o fone")
         senha = st.text_input("Informe a senha")
+
         if st.button("Inserir"):
             View.cliente_inserir(nome, email, fone, senha)
             st.success("Cliente inserido com sucesso")
@@ -34,6 +37,7 @@ class ManterClienteUI:
 
     def atualizar():
         clientes = View.cliente_listar()
+        
         if len(clientes) == 0: st.write("Nenhum cliente cadastrado")
         else:
             op = st.selectbox("Atualização de Clientes", clientes)
@@ -41,6 +45,7 @@ class ManterClienteUI:
             email = st.text_input("Informe o novo e-mail", op.get_email())
             fone = st.text_input("Informe o novo fone", op.get_fone())
             senha = st.text_input("Informe o novo senha", op.get_senha())
+
             if st.button("Atualizar"):
                 id = op.get_id()
                 View.cliente_atualizar(id, nome, email, fone, senha)
@@ -50,9 +55,11 @@ class ManterClienteUI:
 
     def excluir():
         clientes = View.cliente_listar()
+        
         if len(clientes) == 0: st.write("Nenhum cliente cadastrado")
         else:
             op = st.selectbox("Exclusão de Clientes", clientes)
+            
             if st.button("Excluir"):
                 id = op.get_id()
                 View.cliente_excluir(id)

@@ -16,30 +16,13 @@ from views import View
 import streamlit as st
 
 class IndexUI:
+
     def menu_admin():            
         op = st.sidebar.selectbox("Menu", ["Cadastro de Clientes", "Cadastro de Serviços", "Cadastro de Horários", "Cadastro de Profissionais"])
         if op == "Cadastro de Clientes": ManterClienteUI.main()
         if op == "Cadastro de Serviços": ManterServicoUI.main()
         if op == "Cadastro de Horários": ManterHorarioUI.main()
         if op == "Cadastro de Profissionais": ManterProfissionalUI.main()
-
-    def sidebar():
-        if "usuario_id" not in st.session_state:
-            IndexUI.menu_visitante()
-        else:
-            st.sidebar.write("Bem-vindo(a), " + st.session_state["usuario_nome"])
-            admin = st.session_state["usuario_nome"] == "admin"
-            tipo = st.session_state.get("tipo_usuario", "")
-
-
-            if admin:
-                IndexUI.menu_admin()
-            elif tipo == "profissional":
-                IndexUI.menu_profissional()
-            else:
-                IndexUI.menu_cliente()
-
-            IndexUI.sair_do_sistema()
 
     def menu_visitante():
         op = st.sidebar.selectbox("Menu", ["Entrar no Sistema", "Abrir Conta"])
@@ -66,6 +49,23 @@ class IndexUI:
         if op == "Cadastro de Horários": ManterHorarioUI.main()
         if op == "Cadastro de Profissionais": ManterProfissionalUI.main()
         if op == "Alterar Senha": AlterarSenhaUI.main()
+
+    def sidebar():
+        if "usuario_id" not in st.session_state:
+            IndexUI.menu_visitante()
+        else:
+            st.sidebar.write("Bem-vindo(a), " + st.session_state["usuario_nome"])
+            admin = st.session_state["usuario_nome"] == "admin"
+            tipo = st.session_state.get("tipo_usuario", "")
+
+            if admin:
+                IndexUI.menu_admin()
+            elif tipo == "profissional":
+                IndexUI.menu_profissional()
+            else:
+                IndexUI.menu_cliente()
+
+            IndexUI.sair_do_sistema()
 
     def sair_do_sistema():
         if st.sidebar.button("Sair"):

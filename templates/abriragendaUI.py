@@ -26,10 +26,10 @@ class AbrirAgendaUI:
 
                 while inicio < fim:
                     View.horario_inserir(
-                        inicio,   # agora vai como datetime
-                        False,    # confirmado
-                        None,     # cliente
-                        None,     # serviço
+                        inicio,
+                        False,
+                        None,
+                        None,
                         id_profissional
                     )
                     inicio += delta

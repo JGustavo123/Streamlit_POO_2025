@@ -1,6 +1,5 @@
 import json
 
-
 class Servico:
     def __init__(self, id, descricao, valor):
         self.set_id(id)

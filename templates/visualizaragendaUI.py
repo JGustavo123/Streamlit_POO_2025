@@ -3,6 +3,7 @@ from views import View
 import pandas as pd
 
 class VisualizarAgendaUI:
+    
     def main():
         st.header("Meus Serviços")
 
@@ -11,7 +12,6 @@ class VisualizarAgendaUI:
             return
 
         id_profissional = st.session_state["usuario_id"]
-
         horarios = View.horario_filtrar_profissional(id_profissional)
 
         if len(horarios) == 0:
@@ -21,7 +21,6 @@ class VisualizarAgendaUI:
             for h in horarios:
                 cliente = View.cliente_listar_id(h.get_id_cliente())
                 servico = View.servico_listar_id(h.get_id_servico())
-
                 dados.append({
                     "ID": h.get_id(),
                     "Data": h.get_data().strftime("%d/%m/%Y %H:%M") if h.get_data() else "",

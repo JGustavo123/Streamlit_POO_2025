@@ -4,6 +4,7 @@ from views import View
 import time
 
 class ManterServicoUI:
+
     def main():
         st.header("Cadastro de Servicos")
         tab1, tab2, tab3, tab4 = st.tabs(["Listar", "Inserir", "Atualizar", "Excluir"])
@@ -37,6 +38,7 @@ class ManterServicoUI:
             op = st.selectbox("Atualização de Servicos", servicos)
             descricao = st.text_input("Informe a nova descrição", op.get_descricao())
             valor = st.text_input("Informe o novo valor", op.get_valor())
+            
             if st.button("Atualizar"):
                 id = op.get_id()
                 View.servico_atualizar(id, descricao, valor)
@@ -49,6 +51,7 @@ class ManterServicoUI:
         if len(servicos) == 0: st.write("Nenhum servico cadastrado")
         else:
             op = st.selectbox("Exclusão de Servicos", servicos)
+
             if st.button("Excluir"):
                 id = op.get_id()
                 View.servico_excluir(id)
