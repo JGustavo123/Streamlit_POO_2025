@@ -10,13 +10,6 @@ class View:
         for c in View.cliente_listar():
             if c.get_email() == "admin": return
         View.cliente_inserir("admin", "admin", "fone", "1234")
-
-    def cliente_autenticar(email, senha):
-        for c in View.cliente_listar():
-            if c.get_email() == email and c.get_senha() == senha:
-                return {"id":c.get_id(), "nome":
-            c.get_nome()}
-        return None
     
     def cliente_listar():
         r = ClienteDAO.listar()
@@ -27,16 +20,29 @@ class View:
         return ClienteDAO.listar_id(id)
     
     def cliente_inserir(nome, email, fone, senha):
-        cliente = Cliente(0, nome, email, fone, senha)
-        ClienteDAO.inserir(cliente)
+        exist = True
+        missing = False
+        for c in View.cliente_listar():
+            if c.get_email().lower() == email.lower():
+                exist = True
+                raise ValueError("Já existe um cliente com esse email")
+            else: exist = False
+            if nome() == "" or email == "" or fone == "" or senha == "":
+                missing = True
+                raise ValueError("Falta informação no cliente")
+            else: missing = False
+        if (exist==False) and (missing==False):
+            cliente = Cliente(0, nome, email, fone, senha)
+            ClienteDAO.inserir(cliente)
 
     def cliente_atualizar(id, nome, email, fone, senha):
         cliente = Cliente(id, nome, email, fone, senha)
         ClienteDAO.atualizar(cliente)
 
     def cliente_excluir(id):
-        cliente = Cliente(id, "", "", "", "")
-        ClienteDAO.excluir(cliente)
+        for h in View.horario_listar():
+            if h.get_id_cliente() == id:
+                raise ValueError("Não é possível excluir um cliente que já possui agendamentos.")
 
 
     def servico_listar():
