@@ -40,8 +40,12 @@ class ConfirmarServicoUI:
                 st.error("Horário inválido.")
                 return
 
-            horario.set_confirmado(True)
-            View.horario_atualizar(horario)
-            st.success("Serviço confirmado com sucesso!")
+            if horario.get_id_cliente() is None:
+                st.warning("Não é possível confirmar um horário sem cliente.")
+                return
 
+            horario.set_confirmado(True)
+            View.horario_atualizar_obj(horario)
+            st.success("Serviço confirmado!")
+            
             st.rerun()

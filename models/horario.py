@@ -23,6 +23,11 @@ class Horario:
     def set_id_servico(self, id_servico): self.__id_servico = id_servico
     def set_id_profissional(self, id_profissional): self.__id_profissional = id_profissional
 
+    def __str__(self):
+        if isinstance(self.__data, datetime):
+            return self.__data.strftime("%d/%m/%Y %H:%M")
+        return str(self.__data)
+
     def to_dict(self):
         data_str = None
         if isinstance(self.__data, datetime):

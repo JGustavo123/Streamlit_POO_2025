@@ -104,13 +104,16 @@ class View:
                 r.append(h)
         return r
     
+    def horario_atualizar_obj(horario):
+        HorarioDAO.atualizar(horario)
+
     def horario_atualizar(id, data, confirmado, id_cliente, id_servico, id_profissional):
-        c = Horario(id, data)
-        c.set_confirmado(confirmado)
-        c.set_id_cliente(id_cliente)
-        c.set_id_servico(id_servico)
-        c.set_id_profissional(id_profissional)
-        HorarioDAO.atualizar(c)
+        h = Horario(id, data)
+        h.set_confirmado(confirmado)
+        h.set_id_cliente(id_cliente)
+        h.set_id_servico(id_servico)
+        h.set_id_profissional(id_profissional)
+        HorarioDAO.atualizar(h)
 
     def horario_excluir(id):
         c = Horario(id, None)
