@@ -126,16 +126,57 @@ class View:
         HorarioDAO.excluir(c)
 
 
-    def profissional_inserir(nome,  email, senha, especialidade, conselho):
-        p = Profissional(0, nome, email, senha, especialidade, conselho)
-        ProfissionalDAO.inserir(p)
+    def profissional_inserir(nome, especialidade, conselho, email, senha):
+
+        exist = True
+        missing = False
+        for pro in View.profissional_listar():
+            if pro.get_email().lower() == email.lower():
+                exist = True
+                raise ValueError("já existe um profissional com esse e-mail")
+            else: exist = False
+        for c in View.cliente_listar():
+            if c.get_email().lower() == email.lower():
+                exist = True
+                raise ValueError("Já existe um cliente com esse e-mail")
+            else: exist = False
+            if nome == "" or email == "" or senha == "":
+                missing = True
+                raise ValueError("Falta informação no profissional")
+            else: missing = False
+        if (exist==False) and (missing==False):
+            profissional = Profissional(0, nome, especialidade, conselho, email, senha)
+            ProfissionalDAO.inserir(profissional)
 
     def profissional_atualizar(id, nome, especialidade, conselho, email, senha):
-        p = Profissional(id, nome, email, senha, especialidade, conselho)
-        ProfissionalDAO.atualizar(p)
+
+        exist = True
+        missing = False
+        for pro in View.profissional_listar():
+            if pro.get_email().lower() == email.lower() and pro.get_id() != id:
+                exist = True
+                raise ValueError("Já existe um profissional com esse e-mail")
+            else: exist = False
+        for c in View.cliente_listar():
+            if c.get_email().lower() == email.lower():
+                exist = True
+                raise ValueError("Já existe um cliente com esse e-mail")
+            else: exist = False
+            if nome == "" or email == "" or senha == "":
+                missing = True
+                raise ValueError("Falta informação no cliente")
+            else: missing = False
+        if (exist==False) and (missing==False):
+            profissional = Profissional(id, nome, especialidade, conselho, email, senha)
+            ProfissionalDAO.atualizar(profissional)
 
     def profissional_excluir(id):
-        p = Profissional(id, "", "", "", "", "")
+        for h in View.horario_listar():
+            if h.get_id_profissional() == id:
+                raise ValueError("Não é possível excluir um profissional que já criou uma agenda.")
+
+    def profissional_excluir(id):
+        p = Profissional(id, "0", "0", "0", "0", "0")
         ProfissionalDAO.excluir(p)
 
     def profissional_listar():

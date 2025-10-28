@@ -16,12 +16,41 @@ class Profissional:
     def get_especialidade(self): return self.__especialidade
     def get_conselho(self): return self.__conselho
 
-    def set_id(self, id): self.__id = id
-    def set_nome(self, nome): self.__nome = nome
-    def set_email(self, email): self.__email = email
-    def set_senha(self, senha): self.__senha = senha
-    def set_especialidade(self, especialidade): self.__especialidade = especialidade
-    def set_conselho(self, conselho): self.__conselho = conselho
+    def set_id(self, id):
+        try: 
+            if id is None or id == "": raise ValueError("ID não pode estar vazio")
+            self.__id = id
+        except Exception as Erro: raise ValueError(Erro)
+
+    def set_nome(self, nome):
+        try:
+            if nome is None or nome =="": raise ValueError("Nome não pode estar vazio")
+            self.__nome = nome
+        except Exception as Erro: raise ValueError(Erro)
+
+    def set_email(self, email): 
+        try:
+            if email is None or email == "": raise ValueError("E-mail não deve estar vazio")
+            self.__email = email
+        except Exception as Erro: raise ValueError(Erro)
+
+    def set_senha(self, senha): 
+        try:
+            if senha is None or senha == "": raise ValueError("Senha não deve estar vazio")
+            self.__senha = senha
+        except Exception as Erro: raise ValueError(Erro)
+
+    def set_especialidade(self, especialidade): 
+        try:
+            if especialidade is None or especialidade == "": raise ValueError("Especialidade não pode estar vazio")
+            self.__especialidade = especialidade
+        except Exception as Erro: raise ValueError(Erro)
+
+    def set_conselho(self, conselho): 
+        try:
+            if conselho is None or conselho == "": raise ValueError("Conselho não deve estar vazio")
+            self.__conselho = conselho
+        except Exception as Erro: raise ValueError(Erro)
 
     def __str__(self):
         return f"{self.__id} - {self.__nome} ({self.__especialidade})"
