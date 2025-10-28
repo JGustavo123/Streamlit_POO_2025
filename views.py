@@ -164,7 +164,7 @@ class View:
             else: exist = False
             if nome == "" or email == "" or senha == "":
                 missing = True
-                raise ValueError("Falta informação no cliente")
+                raise ValueError("Falta alguma informação no cliente")
             else: missing = False
         if (exist==False) and (missing==False):
             profissional = Profissional(id, nome, especialidade, conselho, email, senha)
