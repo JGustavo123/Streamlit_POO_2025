@@ -174,8 +174,6 @@ class View:
         for h in View.horario_listar():
             if h.get_id_profissional() == id:
                 raise ValueError("Não é possível excluir um profissional que já criou uma agenda.")
-
-    def profissional_excluir(id):
         p = Profissional(id, "0", "0", "0", "0", "0")
         ProfissionalDAO.excluir(p)
 

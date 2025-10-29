@@ -30,10 +30,13 @@ class ManterProfissionalUI:
         conselho = st.text_input("Conselho")
 
         if st.button("Inserir"):
-            View.profissional_inserir(nome, email, senha, especialidade, conselho )
-            st.success("Profissional inserido com sucesso!")
-            time.sleep(2)
-            st.rerun()
+            try:
+                View.profissional_inserir(nome, email, senha, especialidade, conselho )
+                st.success("Profissional inserido com sucesso!")
+                time.sleep(2)
+                st.rerun()
+            except Exception as e:
+                st.error(f"Erro ao inserir profissional: {e}")
 
     def atualizar():
         profissionais = View.profissional_listar()
@@ -47,11 +50,14 @@ class ManterProfissionalUI:
             conselho = st.text_input("Informe o novo conselho", op.get_conselho())
 
             if st.button("Atualizar"):
-                id = op.get_id()
-                View.profissional_atualizar(id, nome, email, senha, especialidade, conselho)
-                st.success("Profissional atualizado com sucesso")
-                time.sleep(2)
-                st.rerun()
+                try:    
+                    id = op.get_id()
+                    View.profissional_atualizar(id, nome, email, senha, especialidade, conselho)
+                    st.success("Profissional atualizado com sucesso")
+                    time.sleep(2)
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"Erro ao atualizar profissional: {e}")
 
     def excluir():
         profissionais = View.profissional_listar()
@@ -60,8 +66,11 @@ class ManterProfissionalUI:
             op = st.selectbox("Exclusão de Profissionals", profissionais)
 
             if st.button("Excluir"):
-                id = op.get_id()
-                View.profissional_excluir(id)
-                st.success("Profissional excluído com sucesso")
-                time.sleep(2)
-                st.rerun()
+                try:
+                    id = op.get_id()
+                    View.profissional_excluir(id)
+                    st.success("Profissional excluído com sucesso")
+                    time.sleep(2)
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"Erro ao excluir profissional: {e}")
