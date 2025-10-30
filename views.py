@@ -76,6 +76,12 @@ class View:
         return r   
          
     def horario_inserir(data, confirmado, id_cliente, id_servico, id_profissional):
+        if isinstance(data, str):
+            data = datetime.fromisoformat(data)
+        for h in View.horario_listar():
+            if h.get_id_profissional() == id_profissional and h.get_data() == data:
+                raise ValueError("O profissional já possui um horário nesta data e hora.")
+            
         c = Horario(0, data)
         c.set_confirmado(confirmado)
         c.set_id_cliente(id_cliente)
@@ -110,9 +116,6 @@ class View:
                 r.append(h)
         return r
     
-    def horario_atualizar_obj(horario):
-        HorarioDAO.atualizar(horario)
-
     def horario_atualizar(id, data, confirmado, id_cliente, id_servico, id_profissional):
         h = Horario(id, data)
         h.set_confirmado(confirmado)
@@ -122,9 +125,11 @@ class View:
         HorarioDAO.atualizar(h)
 
     def horario_excluir(id):
+        for h in View.horario_listar():
+            if h.get_id_cliente() != "" or h.get_id_cliente() != None:
+                raise ValueError("Não deve excluir uma agenda de um cliente")
         c = Horario(id, None)
         HorarioDAO.excluir(c)
-
 
     def profissional_inserir(nome, especialidade, conselho, email, senha):
 
