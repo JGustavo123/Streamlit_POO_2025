@@ -35,6 +35,12 @@ class View:
             cliente = Cliente(0, nome, email, fone, senha)
             ClienteDAO.inserir(cliente)
 
+    def cliente_autenticar(email, senha):
+        for c in ClienteDAO.listar():
+            if c.get_email() == email and c.get_senha() == senha:
+                return {"id": c.get_id(), "nome": c.get_nome()}
+        return None
+
     def cliente_atualizar(id, nome, email, fone, senha):
         cliente = Cliente(id, nome, email, fone, senha)
         ClienteDAO.atualizar(cliente)

@@ -37,3 +37,4 @@ class AbrirAgendaUI:
                 st.success("Agenda aberta com sucesso!")
             except Exception as e:
                 st.error(f"Erro ao abrir agenda: {e}")
+
