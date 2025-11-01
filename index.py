@@ -1,3 +1,4 @@
+import streamlit as st
 from templates.manterclienteUI import ManterClienteUI
 from templates.manterservicoUI import ManterServicoUI
 from templates.manterhorarioUI import ManterHorarioUI
@@ -13,42 +14,63 @@ from templates.visualizarservicosUI import VisualizarServicosUI
 from templates.confirmarservicoUI import ConfirmarServicoUI
 from templates.alterarsenhaUI import AlterarSenhaUI
 from views import View
-import streamlit as st
+
 
 class IndexUI:
 
     def menu_admin():            
-        op = st.sidebar.selectbox("Menu", ["Cadastro de Clientes", "Cadastro de Serviços", "Cadastro de Horários", "Cadastro de Profissionais"])
+        op = st.sidebar.selectbox(
+            "Menu", 
+            [
+                "Cadastro de Clientes",
+                "Cadastro de Serviços",
+                "Cadastro de Horários",
+                "Cadastro de Profissionais",
+                "Alterar Senha"
+            ]
+        )
+
         if op == "Cadastro de Clientes": ManterClienteUI.main()
-        if op == "Cadastro de Serviços": ManterServicoUI.main()
-        if op == "Cadastro de Horários": ManterHorarioUI.main()
-        if op == "Cadastro de Profissionais": ManterProfissionalUI.main()
+        elif op == "Cadastro de Serviços": ManterServicoUI.main()
+        elif op == "Cadastro de Horários": ManterHorarioUI.main()
+        elif op == "Cadastro de Profissionais": ManterProfissionalUI.main()
+        elif op == "Alterar Senha": AlterarSenhaUI.main()
 
     def menu_visitante():
         op = st.sidebar.selectbox("Menu", ["Entrar no Sistema", "Abrir Conta"])
         if op == "Entrar no Sistema": LoginUI.main()
-        if op == "Abrir Conta": AbrirContaUI.main()
+        elif op == "Abrir Conta": AbrirContaUI.main()
 
     def menu_cliente():
         op = st.sidebar.selectbox("Menu", ["Meus Dados", "Agendar Serviço", "Visualizar Serviços"])
         if op == "Meus Dados": PerfilClienteUI.main()
-        if op == "Agendar Serviço": AgendarServicoUI.main()
-        if op == "Visualizar Serviços": VisualizarServicosUI.main()
+        elif op == "Agendar Serviço": AgendarServicoUI.main()
+        elif op == "Visualizar Serviços": VisualizarServicosUI.main()
             
     def menu_profissional():
         op = st.sidebar.selectbox("Menu", ["Meus Dados", "Abrir Minha Agenda", "Visualizar Agenda", "Confirmar Serviço"])
         if op == "Meus Dados": PerfilProfissionalUI.main()
-        if op == "Abrir Minha Agenda": AbrirAgendaUI.main()
-        if op == "Visualizar Agenda": VisualizarAgendaUI.main()
-        if op == "Confirmar Serviço": ConfirmarServicoUI.main()
+        elif op == "Abrir Minha Agenda": AbrirAgendaUI.main()
+        elif op == "Visualizar Agenda": VisualizarAgendaUI.main()
+        elif op == "Confirmar Serviço": ConfirmarServicoUI.main()
 
-    def menu_admin():
-        op = st.sidebar.selectbox("Menu", ["Cadastro de Clientes", "Cadastro de Serviços", "Cadastro de Horários", "Cadastro de Profissionais", "Alterar Senha"])
-        if op == "Cadastro de Clientes": ManterClienteUI.main()
-        if op == "Cadastro de Serviços": ManterServicoUI.main()
-        if op == "Cadastro de Horários": ManterHorarioUI.main()
-        if op == "Cadastro de Profissionais": ManterProfissionalUI.main()
-        if op == "Alterar Senha": AlterarSenhaUI.main()
+    # Tema claro/escuro
+    @staticmethod
+    def configurar_tema():
+        if "tema" not in st.session_state:
+            st.session_state.tema = "light"
+
+        def alternar_tema(tema):
+            st.session_state.tema = tema
+            st._config.set_option("theme.base", tema)
+
+        st.sidebar.markdown("Configurações de tema")
+        tema_escolhido = st.sidebar.radio(
+            "Tema", 
+            ["light", "dark"], 
+            index=0 if st.session_state.tema == "light" else 1
+        )
+        alternar_tema(tema_escolhido)
 
     def sidebar():
         if "usuario_id" not in st.session_state:
@@ -69,11 +91,14 @@ class IndexUI:
 
     def sair_do_sistema():
         if st.sidebar.button("Sair"):
-            del st.session_state["usuario_id"]
-            del st.session_state["usuario_nome"]
+            for chave in ["usuario_id", "usuario_nome", "tipo_usuario"]:
+                if chave in st.session_state:
+                    del st.session_state[chave]
             st.rerun()
 
     def main():
+        st.set_page_config(page_title="Sistema", layout="wide")
+        IndexUI.configurar_tema() 
         View.cliente_criar_admin()
         IndexUI.sidebar()
 
