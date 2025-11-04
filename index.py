@@ -54,24 +54,6 @@ class IndexUI:
         elif op == "Visualizar Agenda": VisualizarAgendaUI.main()
         elif op == "Confirmar Serviço": ConfirmarServicoUI.main()
 
-    # Tema claro/escuro
-    @staticmethod
-    def configurar_tema():
-        if "tema" not in st.session_state:
-            st.session_state.tema = "light"
-
-        def alternar_tema(tema):
-            st.session_state.tema = tema
-            st._config.set_option("theme.base", tema)
-
-        st.sidebar.markdown("Configurações de tema")
-        tema_escolhido = st.sidebar.radio(
-            "Tema", 
-            ["light", "dark"], 
-            index=0 if st.session_state.tema == "light" else 1
-        )
-        alternar_tema(tema_escolhido)
-
     def sidebar():
         if "usuario_id" not in st.session_state:
             IndexUI.menu_visitante()
