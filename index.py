@@ -48,11 +48,15 @@ class IndexUI:
         elif op == "Visualizar Serviços": VisualizarServicosUI.main()
             
     def menu_profissional():
-        op = st.sidebar.selectbox("Menu", ["Meus Dados", "Abrir Minha Agenda", "Visualizar Agenda", "Confirmar Serviço"])
+        op = st.sidebar.selectbox("Menu", ["Meus Dados", "Abrir Minha Agenda", "Visualizar Agenda", "Confirmar Serviço", "Ver Avaliações"])
         if op == "Meus Dados": PerfilProfissionalUI.main()
         elif op == "Abrir Minha Agenda": AbrirAgendaUI.main()
         elif op == "Visualizar Agenda": VisualizarAgendaUI.main()
         elif op == "Confirmar Serviço": ConfirmarServicoUI.main()
+        elif op == "Ver Avaliações":
+        from templates.manteravaliacaoUI import ManterAvaliacaoUI
+        ManterAvaliacaoUI.main()
+
 
     def sidebar():
         if "usuario_id" not in st.session_state:
