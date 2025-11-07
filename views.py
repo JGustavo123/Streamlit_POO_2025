@@ -27,7 +27,7 @@ class View:
                 exist = True
                 raise ValueError("Já existe um cliente com esse email")
             else: exist = False
-            if nome() == "" or email == "" or fone == "" or senha == "":
+            if nome == "" or email == "" or fone == "" or senha == "":
                 missing = True
                 raise ValueError("Falta informação no cliente")
             else: missing = False

@@ -80,7 +80,6 @@ class IndexUI:
 
     def main():
         st.set_page_config(page_title="Sistema", layout="wide")
-        IndexUI.configurar_tema() 
         View.cliente_criar_admin()
         IndexUI.sidebar()
 
