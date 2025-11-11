@@ -2,6 +2,7 @@ from models.cliente import Cliente, ClienteDAO
 from models.servico import Servico, ServicoDAO
 from models.horario import Horario, HorarioDAO
 from models.profissional import Profissional, ProfissionalDAO
+from models.avaliacao import Avaliacao, AvaliacaoDAO
 from datetime import datetime
 
 class View:
@@ -201,3 +202,17 @@ class View:
             if p.get_email() == email and p.get_senha() == senha:
                 return {"id": p.get_id(), "nome": p.get_nome()}
         return None
+
+    def avaliacao_inserir(id_cliente, id_profissional, id_servico, nota, comentario):
+        avaliacao = Avaliacao(0, id_cliente, id_profissional, id_servico, nota, comentario)
+        AvaliacaoDAO.inserir(avaliacao)
+
+    def avaliacao_listar():
+        return AvaliacaoDAO.listar()
+
+    def avaliacao_atualizar(id, id_cliente, id_profissional, id_servico, nota, comentario):
+        avaliacao = Avaliacao(id, id_cliente, id_profissional, id_servico, nota, comentario)
+        AvaliacaoDAO.atualizar(avaliacao)
+
+    def avaliacao_excluir(id):
+        AvaliacaoDAO.excluir(id)

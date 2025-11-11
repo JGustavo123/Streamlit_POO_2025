@@ -1,60 +1,75 @@
 import streamlit as st
-from models.manteravaliacao import Avaliacao
+import pandas as pd
+import time
+from views import View
 
 class ManterAvaliacaoUI:
-    @staticmethod
+
     def main():
-        st.title("📋 Gerenciar Avaliações")
+        st.header("Gerenciamento de Avaliações")
+        tab1, tab2, tab3, tab4 = st.tabs(["Listar", "Inserir", "Atualizar", "Excluir"])
+        with tab1: ManterAvaliacaoUI.listar()
+        with tab2: ManterAvaliacaoUI.inserir()
+        with tab3: ManterAvaliacaoUI.atualizar()
+        with tab4: ManterAvaliacaoUI.excluir()
 
-        menu = st.radio("Escolha uma opção:", ["Registrar", "Listar", "Média por Profissional"])
+    def listar():
+        avaliacoes = View.avaliacao_listar()
 
-        if menu == "Registrar":
-            ManterAvaliacaoUI.registrar()
-        elif menu == "Listar":
-            ManterAvaliacaoUI.listar()
-        elif menu == "Média por Profissional":
-            ManterAvaliacaoUI.media_profissional()
+        if len(avaliacoes) == 0:
+            st.write("Nenhuma avaliação cadastrada.")
+        else:
+            list_dic = []
+            for obj in avaliacoes:
+                list_dic.append(obj.to_json())
+            df = pd.DataFrame(list_dic)
+            st.dataframe(df)
 
-    @staticmethod
-    def registrar():
-        st.subheader("Registrar Avaliação")
-        id = st.text_input("ID da Avaliação")
+    def inserir():
         id_cliente = st.text_input("ID do Cliente")
         id_profissional = st.text_input("ID do Profissional")
         id_servico = st.text_input("ID do Serviço")
-        nota = st.slider("Nota", 0.0, 5.0, 3.0, 0.5)
+        nota = st.number_input("Nota (1 a 5)", min_value=1, max_value=5, step=1)
         comentario = st.text_area("Comentário")
 
-        if st.button("Salvar Avaliação"):
-            if id and id_cliente and id_profissional and id_servico:
-                a = Avaliacao(id, nota, comentario, id_cliente, id_profissional, id_servico)
-                a.salvar()
-                st.success("✅ Avaliação salva com sucesso!")
-            else:
-                st.warning("Preencha todos os campos obrigatórios.")
+        if st.button("Inserir"):
+            try:
+                View.avaliacao_inserir(id_cliente, id_profissional, id_servico, nota, comentario)
+                st.success("Avaliação inserida com sucesso!")
+                time.sleep(2)
+                st.rerun()
+            except Exception as e:
+                st.error(f"Erro ao inserir avaliação: {e}")
 
-    @staticmethod
-    def listar():
-        st.subheader("Lista de Avaliações")
-        lista = Avaliacao.listar()
-        if not lista:
-            st.info("Nenhuma avaliação cadastrada.")
+    def atualizar():
+        avaliacoes = View.avaliacao_listar()
+        if len(avaliacoes) == 0:
+            st.write("Nenhuma avaliação cadastrada.")
         else:
-            for a in lista:
-                st.write(f"**ID:** {a.id}")
-                st.write(f"**Nota:** {a.nota}")
-                st.write(f"**Cliente:** {a.id_cliente}")
-                st.write(f"**Profissional:** {a.id_profissional}")
-                st.write(f"**Comentário:** {a.comentario}")
-                st.write("---")
+            op = st.selectbox("Selecione a Avaliação", avaliacoes)
+            id_cliente = st.text_input("ID Cliente", op.get_id_cliente())
+            id_profissional = st.text_input("ID Profissional", op.get_id_profissional())
+            id_servico = st.text_input("ID Serviço", op.get_id_servico())
+            nota = st.number_input("Nova Nota", 1, 5, op.get_nota())
+            comentario = st.text_area("Comentário", op.get_comentario())
 
-    @staticmethod
-    def media_profissional():
-        st.subheader("Média de Avaliações por Profissional")
-        id_profissional = st.text_input("ID do Profissional")
-        if st.button("Calcular Média"):
-            media = Avaliacao.media_profissional(id_profissional)
-            if media is not None:
-                st.success(f"Média de notas do profissional {id_profissional}: {media:.2f}")
-            else:
-                st.info("Esse profissional ainda não foi avaliado.")
+            if st.button("Atualizar"):
+                id = op.get_id()
+                View.avaliacao_atualizar(id, id_cliente, id_profissional, id_servico, nota, comentario)
+                st.success("Avaliação atualizada com sucesso!")
+                time.sleep(2)
+                st.rerun()
+
+    def excluir():
+        avaliacoes = View.avaliacao_listar()
+        if len(avaliacoes) == 0:
+            st.write("Nenhuma avaliação cadastrada.")
+        else:
+            op = st.selectbox("Selecione a Avaliação", avaliacoes)
+
+            if st.button("Excluir"):
+                id = op.get_id()
+                View.avaliacao_excluir(id)
+                st.success("Avaliação excluída com sucesso!")
+                time.sleep(2)
+                st.rerun()

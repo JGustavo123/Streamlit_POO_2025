@@ -13,6 +13,7 @@ from templates.visualizaragendaUI import VisualizarAgendaUI
 from templates.visualizarservicosUI import VisualizarServicosUI
 from templates.confirmarservicoUI import ConfirmarServicoUI
 from templates.alterarsenhaUI import AlterarSenhaUI
+from templates.manteravaliacaoUI import ManterAvaliacaoUI
 from views import View
 
 
@@ -53,10 +54,7 @@ class IndexUI:
         elif op == "Abrir Minha Agenda": AbrirAgendaUI.main()
         elif op == "Visualizar Agenda": VisualizarAgendaUI.main()
         elif op == "Confirmar Serviço": ConfirmarServicoUI.main()
-        elif op == "Ver Avaliações":
-        from templates.manteravaliacaoUI import ManterAvaliacaoUI
-        ManterAvaliacaoUI.main()
-
+        elif op == "Ver Avaliações": ManterAvaliacaoUI.main()
 
     def sidebar():
         if "usuario_id" not in st.session_state:
