@@ -43,18 +43,19 @@ class IndexUI:
         elif op == "Abrir Conta": AbrirContaUI.main()
 
     def menu_cliente():
-        op = st.sidebar.selectbox("Menu", ["Meus Dados", "Agendar Serviço", "Visualizar Serviços"])
+        op = st.sidebar.selectbox("Menu", ["Meus Dados", "Agendar Serviço", "Visualizar Serviços", "Avaliar Profissional"])
         if op == "Meus Dados": PerfilClienteUI.main()
         elif op == "Agendar Serviço": AgendarServicoUI.main()
         elif op == "Visualizar Serviços": VisualizarServicosUI.main()
-            
+        elif op == "Avaliar Profissional": ManterAvaliacaoUI.avaliar()
+
     def menu_profissional():
         op = st.sidebar.selectbox("Menu", ["Meus Dados", "Abrir Minha Agenda", "Visualizar Agenda", "Confirmar Serviço", "Ver Avaliações"])
         if op == "Meus Dados": PerfilProfissionalUI.main()
         elif op == "Abrir Minha Agenda": AbrirAgendaUI.main()
         elif op == "Visualizar Agenda": VisualizarAgendaUI.main()
         elif op == "Confirmar Serviço": ConfirmarServicoUI.main()
-        elif op == "Ver Avaliações": ManterAvaliacaoUI.main()
+        elif op == "Ver Avaliações": ManterAvaliacaoUI.main() 
 
     def sidebar():
         if "usuario_id" not in st.session_state:
