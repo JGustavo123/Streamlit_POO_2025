@@ -14,27 +14,21 @@ class View:
     
     def cliente_listar():
         r = ClienteDAO.listar()
-        r.sort(key = lambda obj : obj.get_nome())
+        r.sort(key=lambda obj: obj.get_nome())
         return r
     
     def cliente_listar_id(id):
         return ClienteDAO.listar_id(id)
     
     def cliente_inserir(nome, email, fone, senha):
-        exist = True
-        missing = False
+        exist = False
+        if nome == "" or email == "" or fone == "" or senha == "":
+            raise ValueError("Falta informação no cliente")
         for c in View.cliente_listar():
             if c.get_email().lower() == email.lower():
-                exist = True
                 raise ValueError("Já existe um cliente com esse email")
-            else: exist = False
-            if nome == "" or email == "" or fone == "" or senha == "":
-                missing = True
-                raise ValueError("Falta informação no cliente")
-            else: missing = False
-        if (exist==False) and (missing==False):
-            cliente = Cliente(0, nome, email, fone, senha)
-            ClienteDAO.inserir(cliente)
+        cliente = Cliente(0, nome, email, fone, senha)
+        ClienteDAO.inserir(cliente)
 
     def cliente_autenticar(email, senha):
         for c in ClienteDAO.listar():
@@ -54,7 +48,7 @@ class View:
 
     def servico_listar():
         r = ServicoDAO.listar()
-        r.sort(key = lambda obj : obj.get_descricao())
+        r.sort(key=lambda obj: obj.get_descricao())
         return r
     
     def servico_listar_id(id):
@@ -77,9 +71,9 @@ class View:
         r = []
         agora = datetime.now()
         for h in View.horario_listar():
-            if h.get_data() >= agora and h.get_confirmado() == False and h.get_id_cliente() == None and h.get_id_profissional() == id_profissional:
+            if h.get_data() >= agora and not h.get_confirmado() and h.get_id_cliente() is None and h.get_id_profissional() == id_profissional:
                 r.append(h)
-        r.sort(key= lambda h : h.get_data())
+        r.sort(key=lambda h: h.get_data())
         return r   
          
     def horario_inserir(data, confirmado, id_cliente, id_servico, id_profissional):
@@ -98,31 +92,29 @@ class View:
 
     def horario_listar():
         r = HorarioDAO.listar()
-        r.sort(key = lambda obj : obj.get_data())
+        r.sort(key=lambda obj: obj.get_data())
         return r
     
     @staticmethod
     def horario_listar_id(id):
-        horarios = View.horario_listar()
-        for h in horarios:
+        for h in View.horario_listar():
             if h.get_id() == id:
                 return h
         return None
 
     def horario_filtrar_profissional(id_profissional):
-        r = []
-        for h in View.horario_listar():
-            if h.get_id_profissional() == id_profissional:
-                r.append(h)
-        return r
-    
+        return [h for h in View.horario_listar() if h.get_id_profissional() == id_profissional]
+
     def horario_filtrar_cliente(id_cliente):
-        r = []
-        for h in View.horario_listar():
-            if h.get_id_profissional() == id_cliente:
-                r.append(h)
-        return r
+        return [h for h in View.horario_listar() if h.get_id_cliente() == id_cliente]
     
+    def horario_listar_concluidos_cliente(id_cliente):
+        concluidos = []
+        for h in View.horario_listar():
+            if h.get_id_cliente() == id_cliente and h.get_confirmado() == True:
+                concluidos.append(h)
+        return concluidos
+
     def horario_atualizar(id, data, confirmado, id_cliente, id_servico, id_profissional):
         h = Horario(id, data)
         h.set_confirmado(confirmado)
@@ -131,56 +123,48 @@ class View:
         h.set_id_profissional(id_profissional)
         HorarioDAO.atualizar(h)
 
+    @staticmethod
+    def horario_atualizar_obj(horario):
+        View.horario_atualizar(
+            horario.get_id(),
+            horario.get_data(),
+            horario.get_confirmado(),
+            horario.get_id_cliente(),
+            horario.get_id_servico(),
+            horario.get_id_profissional()
+        )
+
     def horario_excluir(id):
         for h in View.horario_listar():
-            if h.get_id_cliente() != "" or h.get_id_cliente() != None:
+            if h.get_id_cliente() not in ("", None):
                 raise ValueError("Não deve excluir uma agenda de um cliente")
         c = Horario(id, None)
         HorarioDAO.excluir(c)
 
-    def profissional_inserir(nome, especialidade, conselho, email, senha):
 
-        exist = True
-        missing = False
+    def profissional_inserir(nome, especialidade, conselho, email, senha):
+        if nome == "" or email == "" or senha == "":
+            raise ValueError("Falta informação no profissional")
         for pro in View.profissional_listar():
             if pro.get_email().lower() == email.lower():
-                exist = True
-                raise ValueError("já existe um profissional com esse e-mail")
-            else: exist = False
+                raise ValueError("Já existe um profissional com esse e-mail")
         for c in View.cliente_listar():
             if c.get_email().lower() == email.lower():
-                exist = True
                 raise ValueError("Já existe um cliente com esse e-mail")
-            else: exist = False
-            if nome == "" or email == "" or senha == "":
-                missing = True
-                raise ValueError("Falta informação no profissional")
-            else: missing = False
-        if (exist==False) and (missing==False):
-            profissional = Profissional(0, nome, especialidade, conselho, email, senha)
-            ProfissionalDAO.inserir(profissional)
+        profissional = Profissional(0, nome, especialidade, conselho, email, senha)
+        ProfissionalDAO.inserir(profissional)
 
     def profissional_atualizar(id, nome, especialidade, conselho, email, senha):
-
-        exist = True
-        missing = False
+        if nome == "" or email == "" or senha == "":
+            raise ValueError("Falta alguma informação no profissional")
         for pro in View.profissional_listar():
             if pro.get_email().lower() == email.lower() and pro.get_id() != id:
-                exist = True
                 raise ValueError("Já existe um profissional com esse e-mail")
-            else: exist = False
         for c in View.cliente_listar():
             if c.get_email().lower() == email.lower():
-                exist = True
                 raise ValueError("Já existe um cliente com esse e-mail")
-            else: exist = False
-            if nome == "" or email == "" or senha == "":
-                missing = True
-                raise ValueError("Falta alguma informação no cliente")
-            else: missing = False
-        if (exist==False) and (missing==False):
-            profissional = Profissional(id, nome, especialidade, conselho, email, senha)
-            ProfissionalDAO.atualizar(profissional)
+        profissional = Profissional(id, nome, especialidade, conselho, email, senha)
+        ProfissionalDAO.atualizar(profissional)
 
     def profissional_excluir(id):
         for h in View.horario_listar():
@@ -191,7 +175,7 @@ class View:
 
     def profissional_listar():
         r = ProfissionalDAO.listar()
-        r.sort(key = lambda obj : obj.get_nome())
+        r.sort(key=lambda obj: obj.get_nome())
         return r
 
     def profissional_listar_id(id):
@@ -202,6 +186,7 @@ class View:
             if p.get_email() == email and p.get_senha() == senha:
                 return {"id": p.get_id(), "nome": p.get_nome()}
         return None
+
 
     def avaliacao_inserir(id_cliente, id_profissional, id_servico, nota, comentario):
         avaliacao = Avaliacao(0, id_cliente, id_profissional, id_servico, nota, comentario)

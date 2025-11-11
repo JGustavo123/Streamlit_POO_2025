@@ -3,9 +3,16 @@ from views import View
 
 class ConfirmarServicoUI:
 
+    @staticmethod
     def main():
+        # --- Mostrar mensagem de sucesso logo no início ---
+        if "msg" in st.session_state:
+            st.success(st.session_state["msg"])
+            del st.session_state["msg"]
+
         st.header("Confirmar Serviço")
 
+        # --- Verifica se há profissional logado ---
         if "usuario_id" not in st.session_state:
             st.error("Nenhum profissional logado.")
             return
@@ -13,28 +20,28 @@ class ConfirmarServicoUI:
         id_profissional = st.session_state["usuario_id"]
         horarios = View.horario_filtrar_profissional(id_profissional)
 
-        if len(horarios) == 0:
-            st.info("Nenhum horário disponível para confirmação.")
+        # --- Filtrar apenas horários que têm cliente e não estão confirmados ---
+        horarios_disponiveis = [
+            h for h in horarios 
+            if h.get_id_cliente() is not None and h.get_confirmado() is False
+        ]
+
+        if len(horarios_disponiveis) == 0:
+            st.info("Nenhum horário com cliente pendente de confirmação.")
             return
         
+        # --- Lista horários disponíveis ---
         opcoes_horarios = []
-
-        for h in horarios:
+        for h in horarios_disponiveis:
             cliente = View.cliente_listar_id(h.get_id_cliente())
-            cliente_nome = cliente.get_nome() if cliente else "Sem cliente"
-            opcoes_horarios.append(f"{h.get_id()} - {h.get_data()} - Confirmado: {h.get_confirmado()}")
+            cliente_nome = cliente.get_nome() if cliente else "Desconhecido"
+            opcoes_horarios.append(f"{h.get_id()} - {h.get_data()} - Cliente: {cliente_nome}")
 
-        opcao_horario = st.selectbox("Informe o horário para confirmar", opcoes_horarios)
+        opcao_horario = st.selectbox("Selecione o horário para confirmar", opcoes_horarios)
         id_horario = int(opcao_horario.split(" - ")[0])
         horario = View.horario_listar_id(id_horario)
 
-        clientes = View.cliente_listar()
-        opcoes_clientes = []
-        for c in clientes:
-            opcoes_clientes.append(f"{c.get_id()} - {c.get_nome()} - {c.get_email()} - {c.get_fone()}")
-
-        cliente_escolhido = st.selectbox("Cliente", opcoes_clientes, index=0 if len(opcoes_clientes) > 0 else None)
-
+        # --- Botão de confirmação ---
         if st.button("Confirmar"):
             if horario is None:
                 st.error("Horário inválido.")
@@ -46,6 +53,7 @@ class ConfirmarServicoUI:
 
             horario.set_confirmado(True)
             View.horario_atualizar_obj(horario)
-            st.success("Serviço confirmado!")
-            
+
+            # Mensagem persistente
+            st.session_state["msg"] = "✅ Serviço confirmado com sucesso!"
             st.rerun()

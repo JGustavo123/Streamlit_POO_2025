@@ -1,124 +1,103 @@
 import streamlit as st
 import pandas as pd
-import time
 from views import View
 
 class ManterAvaliacaoUI:
 
     def main():
-        st.header("Gerenciamento de Avaliações")
-        tab1, tab2, tab3, tab4 = st.tabs(["Listar", "Inserir", "Atualizar", "Excluir"])
-        with tab1: ManterAvaliacaoUI.listar()
-        with tab2: ManterAvaliacaoUI.inserir()
-        with tab3: ManterAvaliacaoUI.atualizar()
-        with tab4: ManterAvaliacaoUI.excluir()
+        st.title("⭐ Minhas Avaliações")
+        ManterAvaliacaoUI.listar()
 
     def listar():
+        id_profissional = st.session_state.get("usuario_id")
+
+        if not id_profissional:
+            st.warning("⚠️ Você precisa estar logado como profissional para ver suas avaliações.")
+            return
+
         avaliacoes = View.avaliacao_listar()
         if not avaliacoes:
-            st.write("Nenhuma avaliação cadastrada.")
-        else:
-            list_dic = [obj.to_json() for obj in avaliacoes]
-            df = pd.DataFrame(list_dic)
-            st.dataframe(df, use_container_width=True)
+            st.info("Nenhuma avaliação encontrada.")
+            return
 
-    def inserir():
-        st.subheader("Inserir Avaliação")
-        id_cliente = st.text_input("ID do Cliente")
-        id_profissional = st.text_input("ID do Profissional")
-        id_servico = st.text_input("ID do Serviço")
-        nota = st.number_input("Nota (1 a 5)", min_value=1, max_value=5, step=1)
-        comentario = st.text_area("Comentário")
+        avaliacoes_profissional = [a for a in avaliacoes if a.get_id_profissional() == id_profissional]
 
-        if st.button("Inserir Avaliação"):
-            try:
-                View.avaliacao_inserir(id_cliente, id_profissional, id_servico, nota, comentario)
-                st.success("✅ Avaliação inserida com sucesso!")
-                time.sleep(1.5)
-                st.rerun()
-            except Exception as e:
-                st.error(f"Erro ao inserir avaliação: {e}")
+        if not avaliacoes_profissional:
+            st.info("Nenhuma avaliação para o seu perfil ainda.")
+            return
 
-    def atualizar():
-        st.subheader("Atualizar Avaliação")
-        avaliacoes = View.avaliacao_listar()
-        if not avaliacoes:
-            st.write("Nenhuma avaliação cadastrada.")
-        else:
-            op = st.selectbox("Selecione a Avaliação", avaliacoes, format_func=lambda a: f"ID {a.get_id()} - Cliente {a.get_id_cliente()}")
-            id_cliente = st.text_input("ID Cliente", op.get_id_cliente())
-            id_profissional = st.text_input("ID Profissional", op.get_id_profissional())
-            id_servico = st.text_input("ID Serviço", op.get_id_servico())
-            nota = st.number_input("Nova Nota", 1, 5, op.get_nota())
-            comentario = st.text_area("Comentário", op.get_comentario())
+        data = []
+        for a in avaliacoes_profissional:
+            cliente = View.cliente_listar_id(a.get_id_cliente())
+            servico = View.servico_listar_id(a.get_id_servico())
 
-            if st.button("Atualizar Avaliação"):
-                try:
-                    id = op.get_id()
-                    View.avaliacao_atualizar(id, id_cliente, id_profissional, id_servico, nota, comentario)
-                    st.success("✅ Avaliação atualizada com sucesso!")
-                    time.sleep(1.5)
-                    st.rerun()
-                except Exception as e:
-                    st.error(f"Erro ao atualizar avaliação: {e}")
+            nome_cliente = cliente.get_nome() if cliente else f"Cliente {a.get_id_cliente()}"
+            nome_servico = servico.get_descricao() if servico else f"Serviço {a.get_id_servico()}"
 
-    def excluir():
-        st.subheader("Excluir Avaliação")
-        avaliacoes = View.avaliacao_listar()
-        if not avaliacoes:
-            st.write("Nenhuma avaliação cadastrada.")
-        else:
-            op = st.selectbox("Selecione a Avaliação", avaliacoes, format_func=lambda a: f"ID {a.get_id()} - Cliente {a.get_id_cliente()}")
-            if st.button("Excluir Avaliação"):
-                try:
-                    id = op.get_id()
-                    View.avaliacao_excluir(id)
-                    st.success("🗑️ Avaliação excluída com sucesso!")
-                    time.sleep(1.5)
-                    st.rerun()
-                except Exception as e:
-                    st.error(f"Erro ao excluir avaliação: {e}")
+            data.append({
+                "Cliente": nome_cliente,
+                "Serviço": nome_servico,
+                "Nota": a.get_nota(),
+                "Comentário": a.get_comentario()
+            })
+
+        df = pd.DataFrame(data)
+
+        media_nota = df["Nota"].mean()
+        qtd_avaliacoes = len(df)
+
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric("📊 Média das Notas", f"{media_nota:.1f}/5")
+        with col2:
+            st.metric("💬 Total de Avaliações", qtd_avaliacoes)
+
+        st.divider()
+        st.subheader("📋 Lista de Avaliações")
+        st.dataframe(df, use_container_width=True)
 
     def avaliar():
-        st.header("⭐ Avaliar Profissional")
+        st.title("📝 Avaliar Profissional")
 
         id_cliente = st.session_state.get("usuario_id")
         if not id_cliente:
-            st.warning("⚠️ Você precisa estar logado como cliente para avaliar.")
+            st.warning("⚠️ Você precisa estar logado como cliente para avaliar um profissional.")
             return
 
-        profissionais = View.profissional_listar()
-        if not profissionais:
-            st.write("Nenhum profissional cadastrado.")
+        horarios = View.horario_listar()
+
+        concluidos = [
+            h for h in horarios
+            if h.get_id_cliente() == id_cliente and h.get_confirmado() == True
+        ]
+
+        if not concluidos:
+            st.info("📅 Você ainda não tem serviços concluídos para avaliar.")
             return
 
-        prof_op = st.selectbox(
-            "Selecione o profissional:",
-            profissionais,
-            format_func=lambda p: f"{p.get_nome()} (ID {p.get_id()})"
-        )
-        id_profissional = prof_op.get_id()
+        opcoes = {}
+        for h in concluidos:
+            profissional = View.profissional_listar_id(h.get_id_profissional())
+            servico = View.servico_listar_id(h.get_id_servico())
 
-        servicos = View.servico_listar()
-        if not servicos:
-            st.write("Nenhum serviço cadastrado.")
-            return
+            nome_prof = profissional.get_nome() if profissional else f"Profissional {h.get_id_profissional()}"
+            nome_serv = servico.get_descricao() if servico else f"Serviço {h.get_id_servico()}"
+            data_formatada = h.get_data().strftime("%d/%m/%Y %H:%M") if h.get_data() else "Sem data"
 
-        serv_op = st.selectbox(
-            "Selecione o serviço:",
-            servicos,
-            format_func=lambda s: f"{s.get_descricao()} (ID {s.get_id()})"
-        )
-        id_servico = serv_op.get_id()
+            opcoes[f"{nome_serv} com {nome_prof} em {data_formatada}"] = h
 
-        nota = st.slider("Nota (1 a 5)", 1, 5, 5)
-        comentario = st.text_area("Comentário (opcional)")
+        escolha = st.selectbox("Escolha o serviço concluído:", list(opcoes.keys()))
+        horario = opcoes[escolha]
+
+        nota = st.slider("⭐ Nota", 1, 5, 5)
+        comentario = st.text_area("💬 Comentário (opcional)")
 
         if st.button("Enviar Avaliação"):
-            try:
-                View.avaliacao_inserir(id_cliente, id_profissional, id_servico, nota, comentario)
-                st.success("✅ Avaliação enviada com sucesso!")
-                time.sleep(1.5)
-                st.rerun()
-            except Exception as e:
-                st.error(f"Erro ao enviar avaliação: {e}")
+            View.avaliacao_inserir(
+                horario.get_id_cliente(),
+                horario.get_id_profissional(),
+                horario.get_id_servico(),
+                nota,
+                comentario
+            )
+            st.success("✅ Avaliação enviada com sucesso!")

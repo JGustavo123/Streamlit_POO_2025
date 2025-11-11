@@ -106,7 +106,7 @@
     {
         "id": 15,
         "data": "2025-11-15 09:00:00",
-        "confirmado": false,
+        "confirmado": true,
         "id_cliente": 2,
         "id_servico": 1,
         "id_profissional": 1
@@ -122,9 +122,9 @@
     {
         "id": 17,
         "data": "2025-11-15 10:00:00",
-        "confirmado": false,
-        "id_cliente": null,
-        "id_servico": null,
+        "confirmado": true,
+        "id_cliente": 2,
+        "id_servico": 1,
         "id_profissional": 1
     },
     {
